@@ -25,27 +25,29 @@
 
 namespace Apatis\Http\Cookie;
 
-use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class RequestCookie
+ * Interface ResponseCookiesInterface
  * @package Apatis\Http\Cookie
  */
-class RequestCookie extends Cookies implements RequestCookiesInterface
+interface ResponseCookiesInterface extends CookiesInterface
 {
     /**
-     * {@inheritdoc}
+     * Attach cookie to header response
+     *
+     * @param ResponseInterface $response
+     *
+     * @return ResponseInterface
      */
-    public static function fromRequest(ServerRequestInterface $request)
-    {
-        return static::fromCookieParams($request->getCookieParams());
-    }
+    public function attachToHeader(ResponseInterface $response);
 
     /**
-     * {@inheritdoc}
+     * Attach cookie to header response, overwrite all Set-Cookie to current cookie
+     *
+     * @param ResponseInterface $response
+     *
+     * @return ResponseInterface
      */
-    public static function fromCookieParams(array $cookieParams)
-    {
-        return new static($cookieParams);
-    }
+    public function writeToHeader(ResponseInterface $response);
 }

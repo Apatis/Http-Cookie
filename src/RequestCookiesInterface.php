@@ -34,24 +34,26 @@ use Psr\Http\Message\ServerRequestInterface;
 interface RequestCookiesInterface extends CookiesInterface
 {
     /**
-     * Parse Cookies From Request
+     * Parse Cookies From Request, cloned current static object.
      *
      * @uses ServerRequestInterface
      *
      * @param ServerRequestInterface $request
      *
-     * @return static|CookiesInterface
+     * @return static|RequestCookiesInterface
+     *
      * @throws \InvalidArgumentException if contains invalid cookie params
      */
-    public static function fromRequest(ServerRequestInterface $request);
+    public function withServerRequest(ServerRequestInterface $request);
 
     /**
-     * @param string[] $cookieParams the values compatible of $_COOKIE globals
+     * Use cookie params, cloned current static object.
      *
-     * @uses ServerRequestInterface::getCookieParams()
+     * @param array $cookieParams cookie compatible $_COOKIE
      *
-     * @return static|CookiesInterface
+     * @return static|RequestCookiesInterface
+     *
      * @throws \InvalidArgumentException if contains invalid cookie params
      */
-    public static function fromCookieParams(array $cookieParams);
+    public function withCookieParams(array $cookieParams);
 }

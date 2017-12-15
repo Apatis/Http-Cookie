@@ -28,6 +28,11 @@ namespace Apatis\Http\Cookie;
 /**
  * Interface CookiesInterface
  * @package Apatis\Http\Cookie
+ *
+ * According RFC6265 {@link https://tools.ietf.org/html/rfc6265#section-5.2}
+ * `Cookie Name` doesn't state explicitly, just determine that cookie properties
+ * must be case-insensitive key name for:
+ * Path, Domain, Expires, Secure & HttpOnly
  */
 interface CookiesInterface
 {
@@ -35,6 +40,8 @@ interface CookiesInterface
      * CookiesInterface constructor.
      *
      * @param array|CookieInterface[]|false[]|null[] $cookies Compatible with $_COOKIES or CookieInterface array value
+     *      NULL / (boolean) false indicate that the cookie value is empty string
+     *
      * @throws \InvalidArgumentException if cookie value contains invalid
      */
     public function __construct(array $cookies = array());
@@ -44,7 +51,7 @@ interface CookiesInterface
      *
      * @param string $name
      *
-     * @return CookieInterface
+     * @return CookieInterface returning CookieInterface if cookie found
      *
      * @throws CookieNotFoundException   if cookie not found
      * @throws \InvalidArgumentException if cookie name is invalid
@@ -55,14 +62,17 @@ interface CookiesInterface
     /**
      * Set Cookie
      *
-     * @param string $name
-     * @param string $value
-     * @param int $expire
-     * @param string $path
-     * @param string $domain
-     * @param bool $secure
-     * @param bool $httpOnly
+     * @param string $name     The cookie name (case sensitive)
+     * @param string $value    Cookie value, the represented values of cookie to stored into client.
+     * @param int    $expire   integer time expire, this include future / past full time (eg : @uses time())
+     * @param string $path     Cookie path that determine as (URI path) to represented for cookie path placed
+     * @param string $domain   the cookie domain
+     * @param bool   $secure   indicate the cookie only transmit for secure HTTPS connection
+     * @param bool   $httpOnly When true the cookie will be made accessible only through the HTTP protocol
      *
+     * @see CookiesInterface::__construct
+     *
+     * @throws \InvalidArgumentException if invalid cookie name or is not as a string
      */
     public function set(
         $name,
@@ -75,12 +85,12 @@ interface CookiesInterface
     );
 
     /**
-     * Set expired for cookie
+     * Set expired / set Expire time for cookie to indicate cookie must be deleted on client.
      *
-     * @param string $name
+     * @param string $name The cookie name
      *
      * @throws CookieNotFoundException if cookie has not found
-     * @throws \InvalidArgumentException if cookie name is not a string
+     * @throws \InvalidArgumentException if invalid cookie name or is not as a string
      */
     public function delete($name);
 
@@ -89,12 +99,15 @@ interface CookiesInterface
      *
      * @param string $name
      *
-     * @return bool
+     * @return bool true if cookie exists otherwise false
+     *
+     * @throws \InvalidArgumentException if invalid cookie name or is not as a string
      */
     public function exist($name);
 
     /**
      * Convert into headers values
+     *
      *  eg:
      * array(
      *     'name' => name=value; path=/path; domain=example.com; expires=01-01-1991 00:00:00 GMT; secure; HttpOnly
@@ -102,12 +115,13 @@ interface CookiesInterface
      *
      * @see CookieInterface::toCookieHeader()
      *
-     * @return string[]
+     * @return string[] contains string array values represented to server on header
      */
     public function toHeaders();
 
     /**
-     * Get cookie as string array cookie params
+     * Get cookie as string array cookie params, like a $_COOKIE Compatible values
+     *
      * eg:
      * array(
      *     'cookieName' => 'cookieValue'
@@ -118,7 +132,7 @@ interface CookiesInterface
     public function toCookieParams();
 
     /**
-     * Get cookies collection
+     * Get cookies collection contains array value of CookieInterface
      *
      * @return CookieInterface[]
      */

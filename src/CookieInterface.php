@@ -28,22 +28,29 @@ namespace Apatis\Http\Cookie;
 /**
  * Interface CookieInterface
  * @package Apatis\Http\Cookie
+ *
+ * According RFC6265 {@link https://tools.ietf.org/html/rfc6265#section-5.2}
+ * `Cookie Name` doesn't state explicitly, just determine that cookie properties
+ * must be case-insensitive key name for:
+ * Path, Domain, Expires, Secure & HttpOnly
  */
 interface CookieInterface
 {
     /**
      * CookieInterface constructor.
      *
-     * @param string $name          Name of cookie
-     * @param string $value         Value of cookie
-     * @param int    $expire           Time expire if expire time
-     * @param string $path     Cookie path
-     * @param bool   $secure     Determine cookie is secure or not
-     * @param string $domain        Determine cookie domain
-     * @param bool   $httpOnly   Determine cookie is httpOnly or not
+     * @param string $name     The cookie name (case sensitive)
+     * @param string $value    Cookie value, the represented values of cookie to stored into client.
+     * @param int    $expire   integer time expire, this include future / past full time (eg : @uses time())
+     * @param string $path     Cookie path that determine as (URI path) to represented for cookie path placed
+     * @param string $domain   The cookie domain
+     * @param bool   $secure   Indicate the cookie only transmit for secure HTTPS connection
+     * @param bool   $httpOnly When true the cookie will be made accessible only through the HTTP protocol
      *
      * @see setcookie()
      * @link http://php.net/manual/en/function.setcookie.php
+     *
+     * @throws \InvalidArgumentException if invalid cookie name or is not as a string
      */
     public function __construct(
         $name,
@@ -63,6 +70,8 @@ interface CookieInterface
     public function getName();
 
     /**
+     * Get stored cookie value
+     *
      * @return string
      */
     public function getValue();
@@ -70,21 +79,21 @@ interface CookieInterface
     /**
      * Set cookie value
      *
-     * @param string $value
+     * @param string $value The cookie value use null|false indicate the cookie is empty string
      */
     public function setValue($value);
 
     /**
      * Get expired
      *
-     * @return int
+     * @return int get full time of cookie must be expired
      */
     public function getExpire();
 
     /**
-     * Get expired expired values
+     * Set Cookie Expires
      *
-     * @param int $expire expire in seconds
+     * @param int $expire integer time expire, this include future / past full time (eg : @uses time())
      */
     public function setExpire($expire);
 
@@ -152,13 +161,6 @@ interface CookieInterface
     public function getDomain();
 
     /**
-     * Convert Cookie value into string
-     *
-     * @return string cookie value
-     */
-    public function __toString();
-
-    /**
      * Get cookie fo header response
      *
      * eg: cookieName=cookieValue; path=/path; domain=example.com; expires=01-01-1991 00:00:00 GMT; secure;HttpOnly
@@ -168,4 +170,11 @@ interface CookieInterface
      * @return string
      */
     public function toCookieHeader();
+
+    /**
+     * Convert Cookie value into string
+     *
+     * @return string cookie value
+     */
+    public function __toString();
 }

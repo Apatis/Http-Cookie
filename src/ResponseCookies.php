@@ -31,13 +31,21 @@ use Psr\Http\Message\ResponseInterface;
  * Class ResponseCookies
  * @package Apatis\Http\Cookie
  */
-class ResponseCookies extends Cookies implements ResponseCookieInterface
+class ResponseCookies extends Cookies implements ResponseCookiesInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function attachToResponse(ResponseInterface $response)
+    public function attachToHeader(ResponseInterface $response)
     {
         return $response->withAddedHeader('Set-Cookie', array_values($this->toHeaders()));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function writeToHeader(ResponseInterface $response)
+    {
+        return $response->withHeader('Set-Cookie', array_values($this->toHeaders()));
     }
 }

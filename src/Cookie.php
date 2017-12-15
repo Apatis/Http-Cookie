@@ -32,7 +32,7 @@ namespace Apatis\Http\Cookie;
 class Cookie implements CookieInterface
 {
     /**
-     * @var string
+     * @var string the cookie name
      */
     protected $name;
 
@@ -292,14 +292,6 @@ class Cookie implements CookieInterface
     /**
      * {@inheritdoc}
      */
-    public function __toString()
-    {
-        return $this->getValue();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function toCookieHeader()
     {
         $cookie = urlencode($this->getName()) . '=' . urlencode($this->getValue());
@@ -322,5 +314,13 @@ class Cookie implements CookieInterface
         }
 
         return $cookie;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->getValue();
     }
 }
