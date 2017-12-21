@@ -229,14 +229,7 @@ class Cookie implements CookieInterface
      */
     public function setSecure($secure)
     {
-        if (!is_bool($secure)) {
-            throw new \InvalidArgumentException(
-                'Cookie secure must be as a boolean %s given',
-                gettype($secure)
-            );
-        }
-
-        $this->secure = $secure;
+        $this->secure = (bool) $secure;
     }
 
     /**
@@ -252,14 +245,7 @@ class Cookie implements CookieInterface
      */
     public function setHttpOnly($httpOnly)
     {
-        if (!is_bool($httpOnly)) {
-            throw new \InvalidArgumentException(
-                'Cookie httpOnly must be as a boolean %s given',
-                gettype($httpOnly)
-            );
-        }
-
-        $this->secure = $httpOnly;
+        $this->secure = (bool) $httpOnly;
     }
 
     /**

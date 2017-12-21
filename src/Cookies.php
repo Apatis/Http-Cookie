@@ -113,7 +113,7 @@ class Cookies implements CookiesInterface, \Countable, \ArrayAccess, \IteratorAg
         $secure = false,
         $httpOnly = false
     ) {
-        $this->cookies[$name] = new Cookie($name, $value, $expire, $path, $secure, $domain, $httpOnly);
+        $this->cookies[$name] = new Cookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
     }
 
     /**
