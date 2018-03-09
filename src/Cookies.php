@@ -73,7 +73,7 @@ class Cookies implements CookiesInterface, \Countable, \ArrayAccess, \IteratorAg
         if (!is_string($name)) {
             throw new \InvalidArgumentException(
                 sprintf(
-                    'Cookie nam must be as a string %s given',
+                    'Cookie name must be as a string %s given',
                     gettype($name)
                 )
             );
