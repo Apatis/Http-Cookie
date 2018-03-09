@@ -229,7 +229,14 @@ class Cookie implements CookieInterface
      */
     public function setSecure($secure)
     {
-        $this->secure = (bool) $secure;
+        if (!is_bool($secure)) {
+            throw new \InvalidArgumentException(
+                'Cookie secure must be as a boolean %s given',
+                gettype($secure)
+            );
+        }
+
+        $this->secure = $secure;
     }
 
     /**
@@ -245,7 +252,14 @@ class Cookie implements CookieInterface
      */
     public function setHttpOnly($httpOnly)
     {
-        $this->secure = (bool) $httpOnly;
+        if (!is_bool($httpOnly)) {
+            throw new \InvalidArgumentException(
+                'Cookie httpOnly must be as a boolean %s given',
+                gettype($httpOnly)
+            );
+        }
+
+        $this->secure = $httpOnly;
     }
 
     /**
@@ -282,18 +296,16 @@ class Cookie implements CookieInterface
     {
         $cookie = urlencode($this->getName()) . '=' . urlencode($this->getValue());
         if (($path = $this->getPath()) != '') {
-            $path = urlencode($path);
-            $cookie .= "; path={$path}";
+            $cookie .= "; Path={$path}";
         }
         if (($domain = $this->getDomain()) != '') {
-            $domain = urlencode($domain);
-            $cookie .= "; domain={$domain}";
+            $cookie .= "; Domain={$domain}";
         }
         if (($expire = $this->getExpire()) > 0) {
-            $cookie .= "; expires=" . urlencode(gmdate('D, d-M-Y H:i:s \G\M\T', $expire));
+            $cookie .= "; Expires=" . gmdate('D, d-M-Y H:i:s \G\M\T', $expire);
         }
         if ($this->isSecure()) {
-            $cookie .= "; secure";
+            $cookie .= "; Secure";
         }
         if ($this->isHttpOnly()) {
             $cookie .= "; HttpOnly";
