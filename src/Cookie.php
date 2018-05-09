@@ -149,6 +149,9 @@ class Cookie implements CookieInterface
      */
     public function setExpire($expire)
     {
+        if (null === $expire || false === $expire) {
+            $expire = 0;
+        }
         // check if expire is integer or numeric converted abs is integer
         $expire = is_numeric($expire) && is_int(abs($expire))
             ? abs($expire)
@@ -171,6 +174,10 @@ class Cookie implements CookieInterface
      */
     public function expireAfter($time)
     {
+        if (null === $time || false === $time) {
+            $time = 0;
+        }
+
         // check if expire is integer or numeric converted abs is integer
         $time = is_numeric($time) && is_int(abs($time))
             ? abs($time)
@@ -295,17 +302,19 @@ class Cookie implements CookieInterface
     public function toCookieHeader()
     {
         $cookie = urlencode($this->getName()) . '=' . urlencode($this->getValue());
-        if (($path = $this->getPath()) != '') {
-            $cookie .= "; Path={$path}";
+        if (($path = $this->getPath()) !== '') {
+            $path = urlencode($path);
+            $cookie .= "; path={$path}";
         }
-        if (($domain = $this->getDomain()) != '') {
-            $cookie .= "; Domain={$domain}";
+        if (($domain = $this->getDomain()) !== '') {
+            $domain = urlencode($domain);
+            $cookie .= "; domain={$domain}";
         }
-        if (($expire = $this->getExpire()) > 0) {
-            $cookie .= "; Expires=" . gmdate('D, d-M-Y H:i:s \G\M\T', $expire);
+        if (($expire = $this->getExpire()) !== 0) {
+            $cookie .= "; expires=" . urlencode(gmdate('D, d-M-Y H:i:s \G\M\T', $expire));
         }
         if ($this->isSecure()) {
-            $cookie .= "; Secure";
+            $cookie .= "; secure";
         }
         if ($this->isHttpOnly()) {
             $cookie .= "; HttpOnly";
